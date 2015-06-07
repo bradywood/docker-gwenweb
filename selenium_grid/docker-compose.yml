@@ -1,0 +1,10 @@
+hub:
+  image: selenium/selenium_grid
+  ports:
+    - "4444:4444"
+firefox:
+  image: selenium/selenium_node
+  links:
+    - hub
+  expose:
+    - "5555"
