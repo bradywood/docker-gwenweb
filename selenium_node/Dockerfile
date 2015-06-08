@@ -6,6 +6,7 @@ RUN apt-get update -qqy \
 && apt-get -qqy --no-install-recommends install \
 firefox \
 xvfb \
+x11-apps \
 bzip2 \
 && rm -rf /var/lib/apt/lists/*
 
