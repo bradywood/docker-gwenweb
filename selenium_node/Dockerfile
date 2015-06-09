@@ -20,4 +20,6 @@ RUN ln -s /opt/firefox/firefox /usr/bin/firefox
 ADD register-node.sh /var/register-node.sh
 RUN chmod 755 /var/register-node.sh
 
+EXPOSE 5555
+
 CMD ["/bin/bash", "/var/register-node.sh"]

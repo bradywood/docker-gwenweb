@@ -6,5 +6,7 @@ firefox:
   image: selenium/selenium_node
   links:
     - hub
+  ports:
+    - "5555:5555"
   expose:
     - "5555"
