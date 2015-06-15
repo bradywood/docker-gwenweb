@@ -2,13 +2,29 @@ FROM selenium/base
 
 ENV FIREFOX_MINOR 34.0.5
 
+#================================================
+# Customize sources for apt-get
+#================================================
+RUN  echo "deb http://archive.ubuntu.com/ubuntu trusty main universe\n" > /etc/apt/sources.list \
+  && echo "deb http://archive.ubuntu.com/ubuntu trusty-updates main universe\n" >> /etc/apt/sources.list
+
 RUN apt-get update -qqy \
 && apt-get -qqy --no-install-recommends install \
 firefox \
-xvfb \
-x11-apps \
 bzip2 \
 && rm -rf /var/lib/apt/lists/*
+
+#==============
+# VNC and Xvfb
+#==============
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    x11vnc \
+    x11-apps \
+    xvfb \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p ~/.vnc \
+  && x11vnc -storepasswd secret ~/.vnc/passwd
 
 RUN [ -e /usr/bin/firefox ] && rm /usr/bin/firefox
 ADD https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${FIREFOX_MINOR}/linux-x86_64/en-US/firefox-${FIREFOX_MINOR}.tar.bz2 /tmp/
