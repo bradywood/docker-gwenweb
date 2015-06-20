@@ -1,12 +1,16 @@
 hub:
-  image: selenium/selenium_grid
+  image: selenium/hub:2.46.0
   ports:
     - "4444:4444"
-firefox:
-  image: selenium/selenium_node_ff
+chrome:
+  image: selenium/node-chrome:2.46.0
   links:
     - hub
   ports:
     - "5555"
   expose:
     - "5555"
+gwenweb:
+  image: gwenweb/gwenweb:1.0
+  links:
+    - hub
