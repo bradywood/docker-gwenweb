@@ -8,9 +8,3 @@ chrome:
     - hub
   ports:
     - "5555"
-  expose:
-    - "5555"
-gwenweb:
-  image: gwenweb/gwenweb:1.0
-  links:
-    - hub
