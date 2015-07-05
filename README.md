@@ -12,12 +12,19 @@ The following instructions will walk you through running gwenweb on a preconfigu
 ```
 docker-compose build
 ```
-3. run the next statement to scale chrome up to 4 browsers.
+3. run the next statement to start compose
+```
+docker-compose up -d
+```
+4. run the next statement to scale chrome up to 4 browsers.
 ```
 docker-compose scale chrome=4
 ```
-
-4. run the next statement pointing to any feature directory, and a location of where you want reports to be created.  It will create the directory if it hasn't been already created.
+5. you will probably want to see whats going on, so run
+```
+docker-compose logs
+```
+6. In a new terminal window, run the next statement pointing to any feature directory, and a location of where you want reports to be created.  It will create the directory if it hasn't been already created.
 ```
 runGwenWeb.sh <feature directory> <report directory>
 ```
