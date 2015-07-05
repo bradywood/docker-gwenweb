@@ -10,6 +10,7 @@
 #       report directory
 
 DOCKER_CMD="docker"
+GWEN_IMAGE=gwen/gwenweb
 if [ $# -eq 2 ]
 then
 
@@ -23,7 +24,7 @@ then
   echo $ABSOLUTE_REPORTS_PATH
 
 
-  ${DOCKER_CMD} run -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link dockergwenweb_hub_1:hub --rm=true --workdir='/opt/gwen-web' gwenweb /opt/gwen-web/runGwenWeb.sh
+  ${DOCKER_CMD} run -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link dockergwenweb_hub_1:hub --rm=true --workdir='/opt/gwen-web' $GWEN_IMAGE /opt/gwen-web/runGwenWeb.sh
 
 else
   echo "To run gwenweb, please run as follows: "
