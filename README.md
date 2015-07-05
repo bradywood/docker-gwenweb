@@ -7,24 +7,24 @@ Running gwenweb this way will also allow the browser to test in the background w
 
 The following instructions will walk you through running gwenweb on a preconfigured selenium grid
 
-1. download and install docker and docker-compose [Docker](http://docs.docker.com/installation/) [Docker Compose](https://docs.docker.com/compose/install/)
-2. run the next statement to pull down selenium grid and chrome version 2:45 
+* download and install docker and docker-compose [Docker](http://docs.docker.com/installation/) [Docker Compose](https://docs.docker.com/compose/install/)
+* run the next statement to pull down selenium grid and chrome version 2:45 
 ```
 docker-compose build
 ```
-3. run the next statement to start compose
+* run the next statement to start compose
 ```
 docker-compose up -d
 ```
-4. run the next statement to scale chrome up to 4 browsers.
+* run the next statement to scale chrome up to 4 browsers.
 ```
 docker-compose scale chrome=4
 ```
-5. you will probably want to see whats going on, so run
+* you will probably want to see whats going on, so run
 ```
 docker-compose logs
 ```
-6. In a new terminal window, run the next statement pointing to any feature directory, and a location of where you want reports to be created.  It will create the directory if it hasn't been already created.
+* In a new terminal window, run the next statement pointing to any feature directory, and a location of where you want reports to be created.  It will create the directory if it hasn't been already created.
 ```
 runGwenWeb.sh <feature directory> <report directory>
 ```
