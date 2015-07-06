@@ -1,61 +1,37 @@
-# Selenium Grid Hub
 
-The Hub receives a test to be executed along with information on which browser and 'platform' where the test should be run. The hub will use this information and delegate to a node that can service those needs.
+# Running gwenweb against preconfigured selenium grid
 
-## Dockerfile
+The gwenweb docker file and docker-compose, allows someone wanting to run gwenweb the ability to run it against a preconfigured selenium grid.  The advantage of docker, is speed and ease of use, however it also removes the requirement for gwenweb to be tightly coupled to a version.  
 
-[`selenium/hub` Dockerfile](https://github.com/SeleniumHQ/docker-selenium/blob/master/Hub/Dockerfile)
+Running gwenweb this way will also allow the browser to test in the background whilst you continue to do your work.  In effect its a browser that is being displayed in a [Virtual Frame Buffer](https://en.wikipedia.org/wiki/Xvfb)
 
-## How to use this image
+The following instructions will walk you through running gwenweb on a preconfigured selenium grid
 
+* download and install docker and docker-compose [Docker](http://docs.docker.com/installation/) [Docker Compose](https://docs.docker.com/compose/install/)
+* run the next statement to pull down selenium grid and chrome version 2:45 
 ```
-$ docker run -d -P --name selenium-hub selenium/hub
+docker-compose build
+```
+* run the next statement to start compose
+```
+docker-compose up -d
+```
+* run the next statement to scale chrome up to 4 browsers.
+```
+docker-compose scale chrome=4
+```
+* you will probably want to see whats going on, so run
+```
+docker-compose logs
+```
+* In a new terminal window, run the next statement pointing to any feature directory, and a location of where you want reports to be created.  It will create the directory if it hasn't been already created.
+```
+runGwenWeb.sh <feature directory> <report directory>
 ```
 
-Note: You can optionally override default configuration settings using environment variables.
-See the [Hub's Dockerfile](Dockerfile) to view the list of variables and their default values.
 
-```
-$ docker run -d -P --name selenium-hub -e GRID_TIMEOUT=10000 selenium/hub
-```
+## What have you done?
+That's it! You have now downloaded a preconfigured selenium grid, scaled chrome to run 4 browsers and ran gwenweb testing using features stored on your computer.  The reports are written to a location of your choosing, before the virtual machine is removed from your machine.  Actually running gwenweb like this means you can run multiple features from anywhere on your computer and all at the same time.  The only thing you need to be aware of is matching the number of browsers against the number of testing activities.  
 
-
-Once the hub is up and running will want to launch nodes that can run tests. You can run as many nodes as you wish.
-
-```
-$ docker run -d --link selenium-hub:hub selenium/node-chrome
-$ docker run -d --link selenium-hub:hub selenium/node-firefox
-```
-
-## What is Selenium?
-_Selenium automates browsers._ That's it! What you do with that power is entirely up to you. Primarily, it is for automating web applications for testing purposes, but is certainly not limited to just that. Boring web-based administration tasks can (and should!) also be automated as well.
-
-Selenium has the support of some of the largest browser vendors who have taken (or are taking) steps to make Selenium a native part of their browser. It is also the core technology in countless other browser automation tools, APIs and frameworks.
-
-See the Selenium [site](http://docs.seleniumhq.org/) for documation on usage within your test code.
-
-## License
-
-View [license information](https://code.google.com/p/selenium/source/browse/COPYING) for the software contained in this image.
-
-## Getting Help
-
-### User Group
-
-The first place where people ask for help about Selenium is the [Official User Group](https://groups.google.com/forum/#!forum/selenium-users). Here, you'll find that most of the time, someone already found the problem you are facing right now, and usually reached the solution for which you are looking.
-
-_Note: Please make sure to search the group before asking for something. Your question likely won't get answered if it was previously answered in another discussion!_
-
-### Chat Room
-
-The best place to ask for help is the user group (because they also keep the information accessible for others to read in the future). However, if you have a very important (or too simple) issue that needs a solution ASAP, you can always enter the IRC chat room. You might just find someone ready to help on `#selenium` at [Freenode](https://freenode.net/).
-
-### Issues
-
-If you have any problems with or questions about this image, please contact us through a [Github issue](https://github.com/SeleniumHQ/docker-selenium/issues). If you have any problems with or questions about Selenium, please contact us through Selenium's [Bug Tracker](https://code.google.com/p/selenium/issues/list).
-
-## Contributing
-
-There are many ways to [contribute](http://docs.seleniumhq.org/about/getting-involved.jsp) whether by answering user questions, additional docs, or pull request we look forward to hearing from you.
-
-If you do supply a patch we will need you to [sign the CLA](https://spreadsheets.google.com/spreadsheet/viewform?hl=en_US&formkey=dFFjXzBzM1VwekFlOWFWMjFFRjJMRFE6MQ#gid=0). We are part of [SFC](http://www.sfconservancy.org/)
+## What if I want to change versions of the grid
+Well this is also pretty simple.  Inside the docker-compose.yml file there is a version, feel free to change this to any version that is currently available.
