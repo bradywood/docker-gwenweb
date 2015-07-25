@@ -21,13 +21,23 @@ RUN  echo "deb http://archive.ubuntu.com/ubuntu trusty main universe\n" > /etc/a
 #  && sed -i 's/\/dev\/urandom/\/dev\/.\/urandom/' ./usr/lib/jvm/java-7-openjdk-amd64/jre/lib/security/java.security
 
 RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get -y -q install software-properties-common htop
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get -y -q update
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+RUN apt-get -y -q install oracle-java8-installer
+RUN apt-get -y -q install oracle-java7-installer
+RUN update-java-alternatives -s java-8-oracle
 RUN apt-get -y --no-install-recommends install
 RUN apt-get install -y ca-certificates
-RUN apt-get install -y   openjdk-7-jre-headless 
+RUN apt-get install -y  openjdk-8-jdk 
+#RUN apt-get install -y   openjdk-7-jre-headless 
 RUN apt-get install -y    unzip
 RUN apt-get install -y    wget 
 RUN rm -rf /var/lib/apt/lists/* 
-RUN sed -i 's/\/dev\/urandom/\/dev\/.\/urandom/' ./usr/lib/jvm/java-7-openjdk-amd64/jre/lib/security/java.security
+RUN sed -i 's/\/dev\/urandom/\/dev\/.\/urandom/' ./usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security
 
 
 #==========
