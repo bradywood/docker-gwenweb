@@ -35,3 +35,13 @@ That's it! You have now downloaded a preconfigured selenium grid, scaled chrome 
 
 ## What if I want to change versions of the grid
 Well this is also pretty simple.  Inside the docker-compose.yml file there is a version, feel free to change this to any version that is currently available.
+
+## Alternative way to running selenium grid with gwen
+The container allows anyone without the correct version of java (1.7 at the time of writing) to be up and running quickly, however you can also run gwen pointing to the set of selenium docker images.
+
+After you have downloaded [gwenweb] (https://github.com/gwen-interpreter/gwen-web#installation) modify the gwen.properties with "gwen.web.remote.url=http://localhost:4444/wd/hub"
+
+```
+bin/gwen-web -b <feature_directory> --parallel -r <report_directory> 
+```
+
