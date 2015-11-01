@@ -39,6 +39,7 @@ RUN  mkdir -p /opt/gwen-web \
 
 
 ADD gwen.properties /opt/gwen-web/
+ADD gwen-web /opt/gwen-web
 #ADD runGwenWeb.sh /opt/gwen-web/
 
 #RUN chmod a+x /opt/gwen-web/runGwenWeb.sh

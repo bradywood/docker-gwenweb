@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ -f "/tmp/gwen.properties" ]; then 
+  export GWEN_PROPERTIES=/tmp/gwen.properties
+else 
+  export GWEN_PROPERTIES=/opt/gwen-web/gwen.properties
+fi
+
+#/features -b -r /reports -p ${GWEN_PROPERTIES}
+gwen-web-1.0.0-SNAPSHOT/bin/gwen-web $*
