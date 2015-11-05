@@ -33,7 +33,8 @@ then
   echo $ABSOLUTE_REPORTS_PATH
 
 
-  ${DOCKER_CMD} run -d -P --name ${DOCKER_GWENWEB_NAME}_hub_1 selenium/hub
+  ${DOCKER_CMD} run -d -P --name ${DOCKER_GWENWEB_NAME}_hub_1 hvdb/docker-selenium-hub
+
 
   if [ "$DEBUG" == true ]
   then
@@ -50,13 +51,18 @@ then
     ${DOCKER_CMD} run -d -P --name ${DOCKER_GWENWEB_NAME}_${BROWSER_TYPE}_${INSTANCE} --link ${DOCKER_GWENWEB_NAME}_hub_1:hub selenium/node-${BROWSER_TYPE}${DEBUG}
   done
 
-  ${DOCKER_CMD} run --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub --workdir='/opt/gwen-web' $GWEN_IMAGE /bin/bash runMe.sh
+  #${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub --workdir='/opt/gwen-web' $GWEN_IMAGE /bin/bash runMe.sh
+  #${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub gwen/gwenweb "-m /features/*.meta -p /opt/gwen-web/gwen.properties"
+  ${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link grid:hub gwen/gwenweb "-m /features/*.meta -p /opt/gwen-web/gwen.properties"
 
-  sleep 10
 
-  PROCESSES=$(docker ps | grep ${DOCKER_GWENWEB_NAME}_ | awk 'FS=" " {printf("%s ",$1)}')
-  docker kill ${PROCESSES}
-  docker rm -f ${PROCESSES}
+  #docker run -it --name test2 --rm -v `pwd`:/tmp -v `pwd`/../../gwen-web/features/jkvine/:/meta -v `pwd`/gwenreports:/reports --link dockergwenweb_hub_1:hub gwen/gwenweb "-m /meta/jkvine.meta -p /opt/gwen-web/gwen.properties"
+
+  #sleep 10
+
+  #PROCESSES=$(docker ps | grep ${DOCKER_GWENWEB_NAME}_ | awk 'FS=" " {printf("%s ",$1)}')
+  #docker kill ${PROCESSES}
+  #docker rm -f ${PROCESSES}
 
 else
   echo "To run gwenweb, please run as follows: "
