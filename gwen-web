@@ -7,4 +7,7 @@ else
 fi
 
 #/features -b -r /reports -p ${GWEN_PROPERTIES}
-/opt/gwen-web/gwen-web-1.0.0-SNAPSHOT/bin/gwen-web $*
+#/opt/gwen-web/gwen-web-1.0.0-SNAPSHOT/bin/gwen-web $*
+ls -la /opt/gwen-web
+ls -la /opt/gwen-web/gwen-web-1.2.0-1-g3ae08b8-SNAPSHOT/*
+/opt/gwen-web/gwen-web-1.2.0-1-g3ae08b8-SNAPSHOT/bin/gwen-web $*
