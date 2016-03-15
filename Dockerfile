@@ -34,20 +34,13 @@ RUN mkdir /opt/jdk \
 #==========
 RUN  mkdir -p /opt/gwen-web \
   && cd /opt/gwen-web \ 
-  && wget --no-verbose https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web_2.11/1.0.0-SNAPSHOT/gwen-web_2.11-1.0.0-SNAPSHOT.zip -O /opt/gwen-web/gwen-web.zip \
+  && wget --no-verbose https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web/1.2.0-1-g3ae08b8-SNAPSHOT/gwen-web-1.2.0-1-g3ae08b8-SNAPSHOT.zip -O /opt/gwen-web/gwen-web.zip \
   && unzip gwen-web
-
 
 ADD gwen.properties /opt/gwen-web/
 ADD gwen-web /opt/gwen-web/
 
 ENTRYPOINT ["/opt/gwen-web/gwen-web"]
-
-#ENTRYPOINT ["/opt/gwen-web/gwen-web-1.0.0-SNAPSHOT/bin/gwen-web"]
-
-#ADD runGwenWeb.sh /opt/gwen-web/
-
-#RUN chmod a+x /opt/gwen-web/runGwenWeb.sh
 
 #============================
 #gwen-web update properties
@@ -59,12 +52,4 @@ ENTRYPOINT ["/opt/gwen-web/gwen-web"]
 # && echo 'if [ -f "/tmp/gwen.properties" ]; then export GWEN_PROPERTIES=/tmp/gwen.properties; else export GWEN_PROPERTIES=/opt/gwen-web/gwen.properties; fi' >> /opt/gwen-web/runMe.sh \
 # && echo 'gwen-web-1.0.0-SNAPSHOT/bin/gwen-web /features -b -r /reports -p ${GWEN_PROPERTIES} --parallel' >> /opt/gwen-web/runMe.sh \
 # && chmod +x /opt/gwen-web/runMe.sh
-
-#========================================
-# Add normal user with passwordless sudo
-#========================================
-#RUN sudo useradd gwen --shell /bin/bash --create-home \
-#  && sudo usermod -a -G sudo gwen \
-#  && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
-#  && echo 'gwen:gwen' | chpasswd
 
