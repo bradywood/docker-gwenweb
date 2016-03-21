@@ -55,7 +55,7 @@ then
   #${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub --workdir='/opt/gwen-web' $GWEN_IMAGE /bin/bash runMe.sh
   #${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub gwen/gwenweb "-m /features/*.meta -p /opt/gwen-web/gwen.properties"
   #${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v `pwd`:/tmp -v $ABSOLUTE_FEATURE_PATH:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link dockergwenweb_hub_1:hub gwen/gwenweb "-m /features/*.meta -p /opt/gwen-web/gwen.properties"
-  ${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v `pwd`:/tmp -v $ABSOLUTE_FEATURE_PATH:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link dockergwenweb_hub_1:hub gwen/gwenweb "-p /opt/gwen-web/gwen.properties -b /features/"
+  ${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v `pwd`:/tmp -v $ABSOLUTE_FEATURE_PATH:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link dockergwenweb_hub_1:hub gwen/gwenweb "-p /opt/gwen-web/gwen.properties -b /features/ "
 
 
   #docker run -it --name test2 --rm -v `pwd`:/tmp -v `pwd`/../../gwen-web/features/jkvine/:/meta -v `pwd`/gwenreports:/reports --link dockergwenweb_hub_1:hub gwen/gwenweb "-m /meta/jkvine.meta -p /opt/gwen-web/gwen.properties"
