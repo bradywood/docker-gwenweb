@@ -1,47 +1,22 @@
-FROM ubuntu:14.04
+FROM openjdk:8-jre
 
 MAINTAINER Brady and Branko <gwen-interpreter@googlegroups.com>
 
-#================================================
-# Customize sources for apt-get
-#================================================
-RUN  echo "deb http://archive.ubuntu.com/ubuntu trusty main universe\n" > /etc/apt/sources.list \
-  && echo "deb http://archive.ubuntu.com/ubuntu trusty-updates main universe\n" >> /etc/apt/sources.list
-
-#========================
-# Miscellaneous packages
-# Includes minimal runtime used for executing non GUI Java programs
-#========================
-RUN apt-get update -qqy \
-  && apt-get -qqy --no-install-recommends install \
-    ca-certificates \
-    openjdk-7-jre-headless \
-    unzip \
-    wget \
-  && rm -rf /var/lib/apt/lists/* \
-  && sed -i 's/\/dev\/urandom/\/dev\/.\/urandom/' ./usr/lib/jvm/java-7-openjdk-amd64/jre/lib/security/java.security
-
-RUN mkdir /opt/jdk \
-   && cd /opt \
-   && wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.tar.gz \
-   && tar -zxf jdk-8u5-linux-x64.tar.gz -C /opt/jdk \
-   && update-alternatives --install /usr/bin/java java /opt/jdk/jdk1.8.0_05/bin/java 100 \
-   && update-alternatives --install /usr/bin/javac javac /opt/jdk/jdk1.8.0_05/bin/javac 100
-
+ADD https://oss.sonatype.org/content/repositories/releases/org/gweninterpreter/gwen-web/2.28.1/gwen-web-2.28.1.zip gwen-web.zip 
 
 #==========
 # gwen-web
 #==========
 RUN  mkdir -p /opt/gwen-web \
   && cd /opt/gwen-web \ 
-  && wget --no-verbose https://oss.sonatype.org/content/repositories/snapshots/org/gweninterpreter/gwen-web_2.11/1.0.0-SNAPSHOT/gwen-web_2.11-1.0.0-SNAPSHOT.zip -O /opt/gwen-web/gwen-web.zip \
+  && wget --no-verbose https://oss.sonatype.org/content/repositories/releases/org/gweninterpreter/gwen-web/2.28.1/gwen-web-2.28.1.zip -O /opt/gwen-web/gwen-web.zip \
   && unzip gwen-web
 
 
 ADD gwen.properties /opt/gwen-web/
 ADD gwen-web /opt/gwen-web/
-
-ENTRYPOINT ["/opt/gwen-web/gwen-web"]
+WORKDIR /opt/gwen-web/gwen-web-2.28.1
+ENTRYPOINT ["./gwen"]
 
 #ENTRYPOINT ["/opt/gwen-web/gwen-web-1.0.0-SNAPSHOT/bin/gwen-web"]
 
