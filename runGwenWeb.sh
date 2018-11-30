@@ -18,8 +18,7 @@ then
   docker pull selenoid/vnc:firefox_57.0
 
   DOCKER_CMD="docker"
-  #GWEN_IMAGE=gwen/gwenweb
-  GWEN_IMAGE=gwen-web
+  GWEN_IMAGE=gwen/gwenweb
 
   export FEATURE_DIRECTORY=$1
   export REPORTS_DIRECTORY=$2
