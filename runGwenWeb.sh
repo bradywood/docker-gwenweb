@@ -2,34 +2,58 @@
 #
 # This bash script is to allow a user to run gwen from anywhere passing in
 # both a feature directory and report directory.
-# It will attempt to run the features against the running docker-compose selenium
-# grid.  It is making an assumption that the management of the docker-compose  
-# environment up to the user to start and scale appropriately.
 
 # Args: feature directory
 #       report directory
 
+GWEN_IMAGE=gwen/gwenweb
 DOCKER_GWENWEB_NAME=dockergwenweb
 
 PID=$$
 
-if [ "$#" -eq 2 ]
-then
+pullDownImages () {
+  docker pull gwen/gwenweb
+  docker pull aerokube/selenoid:latest-release 
   docker pull selenoid/vnc:firefox_57.0
+}
 
-  DOCKER_CMD="docker"
-  GWEN_IMAGE=gwen/gwenweb
+startSelenoidImage () {
+  docker run -d                                   \
+  --name selenoid                                 \
+  -p 4444:4444                                    \
+  -v /var/run/docker.sock:/var/run/docker.sock    \
+  -v `pwd`/config/:/etc/selenoid/:ro              \
+  aerokube/selenoid:latest-release
+}
 
-  export FEATURE_DIRECTORY=$1
-  export REPORTS_DIRECTORY=$2
+checkSelenoid () {
+  selenoidDockerLine=$(docker ps -f name=selenoid)
+}
 
-  mkdir -p $REPORTS_DIRECTORY;
-  export ABSOLUTE_REPORTS_PATH=$(cd `dirname "$REPORTS_DIRECTORY"` && pwd)/`basename "$REPORTS_DIRECTORY"`
+startSelenoid () {
+  SELENOID_RUNNING=$(checkSelenoid || echo "SomeErrorString")
+  if [ $DOWNLOADED_ARTIFACT == "SomeErrorString" ]; then
+    startSelenoidImage
+  fi 
+}
 
-  ${DOCKER_CMD} run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link selenoid:selenoid gwen-web /features/ -p /opt/gwen-web/gwen.properties
+runGwen () {
+  if [ "$#" -eq 2 ]
+  then
+    export FEATURE_DIRECTORY=$1
+    export REPORTS_DIRECTORY=$2
 
-else
-  echo "To run gwenweb, please run as follows: "
-  echo "runGwenWeb.sh <feature directory> <report directory>"
-fi
+    mkdir -p $REPORTS_DIRECTORY;
+    export ABSOLUTE_REPORTS_PATH=$(cd `dirname "$REPORTS_DIRECTORY"` && pwd)/`basename "$REPORTS_DIRECTORY"`
 
+    docker run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link selenoid:selenoid gwen/gwenweb /features/ -p /opt/gwen-web/gwen.properties
+  
+  else
+    echo "Running Demo Mode"
+    mkdir -p reports
+    docker run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/reports:/reports --link selenoid:selenoid gwen/gwenweb /opt/gwen-web/features/google/ -p /opt/gwen-web/gwen.properties --parallel -b
+  fi
+}
+
+startSelenoid
+runGwen $1 $2 
