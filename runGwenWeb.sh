@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # This bash script is to allow a user to run gwen from anywhere passing in
 # both a feature directory and report directory.
@@ -17,7 +17,27 @@ pullDownImages () {
   docker pull selenoid/vnc:firefox_57.0
 }
 
+writeBrowserConfig () {
+mkdir -p config
+cat <<'EOF' >> config/browsers.json
+{
+    "firefox": {
+        "default": "57.0",
+        "versions": {
+            "57.0": {
+                "image": "selenoid/vnc:firefox_57.0",
+                "port": "4444",
+                "path": "/wd/hub"
+            }
+        }
+    }
+}
+EOF
+}
+
 startSelenoidImage () {
+  writeBrowserConfig
+
   docker run -d                                   \
   --name selenoid                                 \
   -p 4444:4444                                    \
@@ -32,21 +52,26 @@ checkSelenoid () {
 
 startSelenoid () {
   SELENOID_RUNNING=$(checkSelenoid || echo "SomeErrorString")
-  if [ $DOWNLOADED_ARTIFACT == "SomeErrorString" ]; then
+  if [[ $SELENOID_RUNNING == "" ]]; then
+    docker rm selenoid
     startSelenoidImage
   fi 
 }
 
 runGwen () {
-  if [ "$#" -eq 2 ]
+  if [ "$#" -ge 2 ]
   then
     export FEATURE_DIRECTORY=$1
-    export REPORTS_DIRECTORY=$2
+    shift
+    export REPORTS_DIRECTORY=$1
+    shift
+
+    export REMAINING=$@
 
     mkdir -p $REPORTS_DIRECTORY;
     export ABSOLUTE_REPORTS_PATH=$(cd `dirname "$REPORTS_DIRECTORY"` && pwd)/`basename "$REPORTS_DIRECTORY"`
 
-    docker run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link selenoid:selenoid gwen/gwenweb /features/ -p /opt/gwen-web/gwen.properties
+    docker run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link selenoid:selenoid gwen/gwenweb /features/ -p /opt/gwen-web/gwen.properties $REMAINING
   
   else
     echo "Running Demo Mode"
@@ -56,4 +81,4 @@ runGwen () {
 }
 
 startSelenoid
-runGwen $1 $2 
+runGwen $@
