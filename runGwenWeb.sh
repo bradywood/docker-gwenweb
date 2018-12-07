@@ -17,9 +17,19 @@ pullDownImages () {
   docker pull selenoid/vnc:firefox_57.0
 }
 
+writeProperties() {
+GWEN_PROP=$(ls | grep gwen.properties )
+  if [[ $GWEN_PROP == "" ]]; then
+cat <<'EOF' > gwen.properties
+gwen.web.browser=firefox
+gwen.web.remote.url=http://selenoid:4444/wd/hub
+EOF
+  fi 
+}
+
 writeBrowserConfig () {
 mkdir -p config
-cat <<'EOF' >> config/browsers.json
+cat <<'EOF' > config/browsers.json
 {
     "firefox": {
         "default": "57.0",
@@ -80,5 +90,6 @@ runGwen () {
   fi
 }
 
+writeProperties
 startSelenoid
 runGwen $@
