@@ -71,7 +71,7 @@ runGwen () {
     mkdir -p $REPORTS_DIRECTORY;
     export ABSOLUTE_REPORTS_PATH=$(cd `dirname "$REPORTS_DIRECTORY"` && pwd)/`basename "$REPORTS_DIRECTORY"`
 
-    docker run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link selenoid:selenoid gwen/gwenweb /features/ -p /opt/gwen-web/gwen.properties $REMAINING
+    docker run -it --rm --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link selenoid:selenoid gwen/gwenweb /features/ -p /opt/gwen-web/gwen.properties $REMAINING
   
   else
     echo "Running Demo Mode"
